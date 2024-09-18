@@ -15,12 +15,14 @@ Our model architecture comprises a CNN to learn positional features, which are t
 This model is the first to use no hand-crafted features to estimate chess ratings and the first to output a rating prediction for each move. Our method highlights the potential of using move-based rating estimation for enhancing rating systems and possibly for applications such as cheating detection.
 
 ## Installation and Setup
+```bash
 conda create --name rating_env python=3.8
 conda activate rating_env
 conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
 pip install scikit-learn==1.3.2
 conda install tensorboard
 pip install chess==1.10.0
+```
 
 You can download games from https://database.lichess.org/ in the .pgn.zst format.
 Put them in data/game_zips.
