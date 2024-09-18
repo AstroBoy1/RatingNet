@@ -29,16 +29,11 @@ def board_to_array(board):
 def parse_game(game):
     """Parses game object to extract evaluations, clocks and positions."""
     time_control = game.headers.get('TimeControl', '')
-
-    # Only take 5 0 blitz games
-    # if time_control != "300+0":
-    #     return None
         
     board = game.board()
     moves = []
     evaluations = []
     clocks = []
-    #positions = [board_to_array(board)]
     positions = []
     node = game
     # Take in the mainline, annotated pgn might have multiple variations
@@ -87,17 +82,14 @@ def parse_game(game):
     if len(evaluations) != len(clocks):
         print(len(evaluations), len(clocks), len(positions))
         print(game_to_pgn_string(game))
-        #breakpoint()
         return -1
     if len(evaluations) != len(positions):
         print(len(evaluations), len(clocks), len(positions))
         print(game_to_pgn_string(game))
-        #breakpoint()
         return -1
     if len(clocks) != len(positions):
         print(len(evaluations), len(clocks), len(positions))
         print(game_to_pgn_string(game))
-        #breakpoint()
         return -1
     return {
         "WhiteElo": game.headers.get("WhiteElo", None),
@@ -135,26 +127,22 @@ def process_pgn_stream():
 
 
 def game_to_pgn_string(game):
+    # Aux function to convert a game object to a pgn string
     exporter = chess.pgn.StringExporter(headers=True, variations=True, comments=True)
     pgn_string = game.accept(exporter)
     return pgn_string
 
 
 def main():
-    #year = "2021"
-    #month = "04"
-
     year = sys.argv[1]
     month = sys.argv[2]
-
     file_path = f"data/game_zips/lichess_db_standard_rated_{year}-{month}.pgn.zst"
-    #"data/game_zips/lichess_db_standard_rated_2021-04.pgn.zst"
-    # zstdcat data/game_zips/lichess_db_standard_rated_2021-04.pgn.zst | python src/format_data.py
-
     max_game_per_month = 30000
+    max_game_per_month = 100
     out_dir = "data/processed_games/"
     game_count = 0
     start = time.time()
+
     for game_info in process_pgn_stream():
     #for game_info in process_pgn_file(file_path):
         if game_count % 1000 == 0:
@@ -162,7 +150,6 @@ def main():
         if game_info == -1:
             print("error", game_count)
             continue
-            #breakpoint()
         filename = f"{out_dir}lichess_db_standard_rated_{year}-{month}_{game_count}.pkl"
         with open(filename, 'wb') as file:
            pickle.dump(game_info, file)

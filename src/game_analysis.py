@@ -6,6 +6,8 @@ from sklearn.model_selection import train_test_split
 from chess_rating_net import ChessEloPredictor
 from chess_rating_net import time_to_seconds
 
+# This file will output some sample game predictions to text files
+
 def calculate_mae(predictions, white_elo, black_elo):
     mae_white = np.abs(predictions[:, 0] - white_elo)
     mae_black = np.abs(predictions[:, 1] - black_elo)
@@ -21,14 +23,11 @@ def save_game_to_txt(file_path, lines, output_dir, suffix, mae):
         output_file.write(f'MAE: {mae}')
 
 def load_model_and_sample_games_to_txt(model_path, data_dir, sample_size=5, output_dir='games_with_lowest_highest_mae'):
-    # Ensure the output directory exists
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    # Prepare the device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-    # Load the model
     params = {
         'train_batch_size': 32,
         'val_batch_size': 8192,
@@ -53,13 +52,8 @@ def load_model_and_sample_games_to_txt(model_path, data_dir, sample_size=5, outp
     model.load_state_dict(saved_model["model_state_dict"])
     model.eval()
     
-    # Get all the game files
     all_files = [os.path.join(data_dir, f) for f in os.listdir(data_dir) if f.endswith('.pkl')]
-
-    # Split into train, val, and test sets
     train_val_files, test_files = train_test_split(all_files, test_size=0.1, random_state=42)
-    #print(len(train_val_files), len(test_files))
-    #return 1
     # Randomly select a few games from the test set
     sampled_files = np.random.choice(test_files, sample_size, replace=False)
     
@@ -88,7 +82,6 @@ def load_model_and_sample_games_to_txt(model_path, data_dir, sample_size=5, outp
         predictions = predictions * ratings_std + ratings_mean
         white_elo, black_elo = float(game_info['WhiteElo']), float(game_info['BlackElo'])
 
-        # Calculate MAE for this game
         mae = calculate_mae(predictions, white_elo, black_elo)
         
         # Prepare data to save to a text file
@@ -126,4 +119,6 @@ def load_model_and_sample_games_to_txt(model_path, data_dir, sample_size=5, outp
 # Example usage
 model_path = 'models/cnn_bilstm_clocks_all/model_55.pth'
 data_dir = 'data/processed_games'
-load_model_and_sample_games_to_txt(model_path, data_dir, sample_size=120000)
+sample_size = 120000
+sample_size = 5
+load_model_and_sample_games_to_txt(model_path, data_dir, sample_size=sample_size)
