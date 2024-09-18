@@ -26,12 +26,18 @@ pip install chess==1.10.0
 
 You can download games from https://database.lichess.org/ in the .pgn.zst format.
 Put them in data/game_zips.
-Next run sh format.sh
+Next run
+```bash
+sh format.sh
+```
 You can change the year and months in that file. This will run src/format_data.py which converts the games into a format suitable for the cnn input.
 The converted game data will be saved in data/processed_games.
 Download model_55.pth and put it in models/cnn_bilstm_clocks_all.
 We also provide a direct download from google drive at this link: 
-You can run the code with python src/chess_rating_net.py
+You can run the code with
+```bash
+python src/chess_rating_net.py
+```
 python src/game_analysis.py will output analyzed games with the rating predictions.
 
 ## License
