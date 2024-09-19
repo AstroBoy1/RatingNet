@@ -6,6 +6,8 @@ Email: [omorim@oregonstate.edu](mailto:omorim@oregonstate.edu), [prasad.tadepall
 
 ---
 
+The paper can be found here: https://arxiv.org/abs/2409.11506
+
 ## Abstract
 
 Current rating systems update ratings incrementally and may not always accurately reflect a player's true strength at all times, especially for rapidly improving or rusty players. To overcome this, we explore a method to estimate player ratings directly from game moves and clock times. We compiled a benchmark dataset from Lichess, encompassing various time controls and including move sequences and clock times.
